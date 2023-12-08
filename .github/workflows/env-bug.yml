@@ -16,11 +16,15 @@ jobs:
         env:
         - dev
         - prd
+    outputs:
+      common_params: ${{ steps.prepare-vars.outputs.common_params }}
+      env_params: ${{ steps.prepare-vars.outputs.env_params }}
     steps:
       - name: Check CLI
         run: |
           jq --version
       - name: Prepare env-specific parameters
+        id: prepare-vars
         run: |
           JQ_PARAMS="-r -c -M ."
           JQ_ADD_PARAMS="-s -r -c"
