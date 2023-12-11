@@ -1,5 +1,5 @@
 name: Build and use matrix
-on: push
+on: workflow_dispatch
 jobs:
   build-matrix:
     runs-on: ubuntu-latest
@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Create outputs
         id: step1
-        run: echo "output_from_${{ matrix.project }}" > "$GITHUB_OUTPUT"
+        run: echo "output_from_${{ matrix.project }}" >> "$GITHUB_OUTPUT"
   print-outputs:
     needs: generate-outputs
     runs-on: ubuntu-latest
