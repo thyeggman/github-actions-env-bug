@@ -1,0 +1,26 @@
+name: Matrix output example
+
+on: [push, pull_request]
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ['dev', 'prd'] # replace this with your environments
+    outputs:
+      output1: ${{ format("steps.step2.outputs.{0}", matrix.env) }}
+    steps:
+      - name: Create outputs
+        id: step1
+        run: echo "output_from_${{ matrix.env }}" > "$GITHUB_OUTPUT"
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ['dev', 'prd'] # replace this with your environments
+    steps:
+      - name: Use outputs
+        run: |
+          echo "Output from job1: ${{ needs.job1.outputs.* }}"

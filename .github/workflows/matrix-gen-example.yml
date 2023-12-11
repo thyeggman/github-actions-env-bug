@@ -1,0 +1,29 @@
+name: Build and use matrix
+on: push
+jobs:
+  build-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
+  generate-outputs:
+    needs: build-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.build-matrix.outputs.matrix) }}
+    outputs:
+      output1: ${{ steps.step1.outputs.step1 }}
+    steps:
+      - name: Create outputs
+        id: step1
+        run: echo "output_from_${{ matrix.project }}" > "$GITHUB_OUTPUT"
+  print-outputs:
+    needs: generate-outputs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.build-matrix.outputs.matrix) }}
+    steps:
+      - name: Print outputs generated in previous step
+        run: echo "${{ needs.generate-outputs.outputs.output1 }}"
