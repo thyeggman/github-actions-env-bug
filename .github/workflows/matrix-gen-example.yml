@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Create outputs
         id: step1
-        run: echo "output_from_${{ matrix.project }}_${{ matrix.config }}=${{ matrix.project }}_${{ matrix.config }}" >> outputs.txt
+        run: echo "{\"output_from_${{ matrix.project }}_${{ matrix.config }}\":\"${{ matrix.project }}_${{ matrix.config }}\"}" >> outputs.json
       - name: Set outputs
         id: step2
         run: |
