@@ -13,17 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.build-matrix.outputs.matrix) }}
-    outputs:
-      output1: ${{ steps.step1.outputs.step1 }}
     steps:
       - name: Create outputs
         id: step1
-        run: echo "output_from_${{ matrix.project }}" >> "$GITHUB_OUTPUT"
+        run: echo "output_from_${{ matrix.project }}_${{ matrix.config }}=${{ matrix.project }}_${{ matrix.config }}" >> outputs.txt
+      - name: Set outputs
+        id: step2
+        run: |
+          outputs=$(cat outputs.txt)
+          echo "::set-output name=outputs::$outputs"
+    outputs:
+      outputs: ${{ steps.step2.outputs.outputs }}
   print-outputs:
     needs: generate-outputs
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJSON(needs.build-matrix.outputs.matrix) }}
     steps:
       - name: Print outputs generated in previous step
-        run: echo "${{ needs.generate-outputs.outputs.output1 }}"
+        run: echo "${{ needs.generate-outputs.outputs.outputs }}"
