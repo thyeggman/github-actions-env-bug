@@ -27,6 +27,8 @@ jobs:
   print-outputs:
     needs: generate-outputs
     runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.generate-outputs.outputs.outputs) }}
     steps:
       - name: Print outputs generated in previous step
-        run: echo "${{ needs.generate-outputs.outputs.outputs }}"
+        run: echo "${{ matrix }}"
