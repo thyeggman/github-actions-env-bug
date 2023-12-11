@@ -20,7 +20,7 @@ jobs:
       - name: Set outputs
         id: step2
         run: |
-          outputs=$(cat outputs.txt)
+          outputs=$(jq -s add outputs.json)
           echo "outputs=$outputs" >> $GITHUB_OUTPUT
     outputs:
       outputs: ${{ steps.step2.outputs.outputs }}
