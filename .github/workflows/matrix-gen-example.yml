@@ -21,7 +21,7 @@ jobs:
         id: step2
         run: |
           outputs=$(cat outputs.txt)
-          echo "::set-output name=outputs::$outputs"
+          echo "outputs=$outputs" >> $GITHUB_OUTPUT
     outputs:
       outputs: ${{ steps.step2.outputs.outputs }}
   print-outputs:
